@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheFly - Life & Money Saver</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans untuk tampilan modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon untuk Icon yang kece -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Warna Soft & Pastel Theme */
+            --bg-body: #f3f4f6;
+            --primary: #818cf8; /* Soft Indigo */
+            --primary-dark: #6366f1;
+            --secondary: #34d399; /* Soft Mint */
+            --accent: #f472b6; /* Soft Pink */
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            --radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        /* Container Utama */
+        .app-container {
+            width: 100%;
+            max-width: 480px; /* Ukuran Mobile App yang estetik */
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 90vh;
+            position: relative;
+            padding-bottom: 80px; /* Space untuk nav bar */
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* Header */
+        header {
+            padding: 25px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand i {
+            color: var(--accent);
+        }
+
+        .user-greeting {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Navigasi */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top: 1px solid #e5e7eb;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-gray);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 4px;
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+            transition: transform 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active i {
+            transform: translateY(-3px);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Cards */
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #a78bfa 100%);
+            color: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .balance-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 5px 0 15px 0;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 12px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-item i {
+            font-size: 1.2rem;
+        }
+
+        .stat-info span {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        
+        .stat-info strong {
+            font-size: 0.9rem;
+        }
+
+        /* Quote Card */
+        .quote-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent);
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        /* Lists (Task & History) */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .btn-icon {
+            background: var(--bg-body);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #e0e7ff;
+        }
+
+        .list-item {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+
+        .list-item:hover {
+            transform: scale(1.01);
+        }
+
+        /* Task Specific */
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox.checked {
+            background: var(--primary);
+        }
+
+        .checkbox i {
+            color: white;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .checkbox.checked i {
+            display: block;
+        }
+
+        .task-text {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .task-text.done {
+            text-decoration: line-through;
+            color: var(--text-gray);
+        }
+
+        .task-time {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-top: 2px;
+        }
+
+        /* Transaction Specific */
+        .trans-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .trans-cat {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .trans-amount {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .trans-amount.plus { color: var(--secondary); }
+        .trans-amount.minus { color: var(--text-dark); }
+
+        /* FAB (Floating Action Button) */
+        .fab {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+            z-index: 90;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        /* Modal / Form Overlay */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: flex-end; /* Bottom sheet style */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            padding: 25px;
+            border-radius: 25px 25px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-gray);
+            cursor: pointer;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(31, 41, 55, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            z-index: 300;
+            transition: transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-gray);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: #d1d5db;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Progress Bar for Tasks */
+        .progress-container {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            margin: 0 20px 20px 20px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            text-align: right;
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin-top: -15px;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div>
+                <div class="brand"><i class="ri-flight-takeoff-fill"></i> TheFly</div>
+                <div class="user-greeting" id="greetingText">Halo, Bestie!</div>
+            </div>
+            <div class="btn-icon" onclick="toggleInfo()">
+                <i class="ri-more-fill"></i>
+            </div>
+        </header>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <i class="ri-checkbox-circle-line"></i>
+            <span id="toastMsg">Berhasil disimpan!</span>
+        </div>
+
+        <!-- SECTION 1: DASHBOARD -->
+        <section id="dashboard" class="section active">
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-label">Total Cuan Kamu</div>
+                <div class="balance-amount" id="totalBalance">Rp 0</div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <i class="ri-arrow-up-circle-fill" style="color: #a7f3d0;"></i>
+                        <div class="stat-info">
+                            <span>Masuk</span>
+                            <strong id="totalIncome">Rp 0</strong>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="ri-arrow-down-circle-fill" style="color: #fecaca;"></i>
+                        <div class="stat-info">
+                            <span>Keluar</span>
+                            <strong id="totalExpense">Rp 0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quote Motivasi -->
+            <div class="quote-card" id="dailyQuote">
+                "Uang itu datang dan pergi, tapi gaya hidup hemat bikin kita tenang."
+            </div>
+
+            <div class="section-header">
+                <div class="section-title">Aktivitas Terkini</div>
+            </div>
+            <div id="recentTransactionsList">
+                <!-- Diisi JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: JADWAL (PLANNER) -->
+        <section id="planner" class="section">
+            <div class="progress-container">
+                <div class="progress-bar" id="taskProgressBar"></div>
+            </div>
+            <div class="progress-text" id="taskProgressText">0% Selesai</div>
+
+            <div class="section-header">
+                <div class="section-title">Jadwal Hari Ini</div>
+            </div>
+            <div id="taskList">
+                <!-- Diisi JS -->
+            </div>
+            <button class="fab" onclick="openModal('taskModal')"><i class="ri-add-line"></i></button>
+        </section>
+
+        <!-- SECTION 3: FINANCE (CUAN) -->
+        <section id="finance" class="section">
+            <div class="section-header">
+                <div class="section-title">Riwayat Keuangan</div>
+                <button class="btn-icon" onclick="resetFinance()"><i class="ri-refresh-line"></i></button>
+            </div>
+            <div id="financeList">
+                <!-- Diisi JS -->
+            </div>
+            <button class="fab" onclick="openModal('financeModal')"><i class="ri-add-line"></i></button>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('dashboard', this)">
+                <i class="ri-dashboard-line"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('planner', this)">
+                <i class="ri-calendar-todo-line"></i>
+                <span>Jadwal</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('finance', this)">
+                <i class="ri-wallet-3-line"></i>
+                <span>Cuan</span>
+            </div>
+        </nav>
+
+        <!-- MODAL TAMBAH TUGAS -->
+        <div class="modal-overlay" id="taskModal">
+            <div class="modal-content">
+                <button class="btn-close" onclick="closeModal('taskModal')">&times;</button>
+                <h3 style="margin-bottom: 20px;">Tambah Rencana</h3>
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label class="form-label">Aplah yang mau dikerjain?</label>
+                        <input type="text" class="form-input" id="taskInput" placeholder="Contoh: Kerjain Tugas, Nge-gym..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jam berapa?</label>
+                        <input type="time" class="form-input" id="taskTime" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan Jadwal</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL TAMBAH FINANSIAL -->
+        <div class="modal-overlay" id="financeModal">
+            <div class="modal-content">
+                <button class="btn-close" onclick="closeModal('financeModal')">&times;</button>
+                <h3 style="margin-bottom: 20px;">Catat Cuan</h3>
+                <form id="financeForm">
+                    <div class="form-group">
+                        <label class="form-label">Jenis Transaksi</label>
+                        <select class="form-select" id="transType">
+                            <option value="expense">Pengeluaran (💸)</option>
+                            <option value="income">Pemasukan/Tabungan (💰)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Banyaknya (Rp)</label>
+                        <input type="number" class="form-input" id="transAmount" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Untuk apa?</label>
+                        <input type="text" class="form-input" id="transDesc" placeholder="Contoh: Jajan Kopi, Gajian..." required>
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan Transaksi</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA STATE ---
+        let tasks = JSON.parse(localStorage.getItem('theFly_tasks')) || [];
+        let transactions = JSON.parse(localStorage.getItem('theFly_transactions')) || [];
+
+        const quotes = [
+            "Gas terus, masa depan gemilang menunggu!",
+            "Hemat itu keren, boros itu kuno.",
+            "Jangan lupa senyum, hari ini indah.",
+            "Disiplin itu kunci kebebasan finansial.",
+            "Setiap rupiah yang disimpan adalah pahlawan."
+        ];
+
+        // --- INIT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            setGreeting();
+            setQuote();
+            renderAll();
+        });
+
+        // --- CORE FUNCTIONS ---
+        function saveData() {
+            localStorage.setItem('theFly_tasks', JSON.stringify(tasks));
+            localStorage.setItem('theFly_transactions', JSON.stringify(transactions));
+            renderAll();
+        }
+
+        function renderAll() {
+            renderTasks();
+            renderFinance();
+            renderDashboard();
+        }
+
+        // --- NAVIGATION ---
+        function switchTab(tabId, element) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            // Show target section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update Nav Icons
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            // Reset forms
+            if(id === 'taskModal') document.getElementById('taskForm').reset();
+            if(id === 'financeModal') document.getElementById('financeForm').reset();
+        }
+
+        // --- TOAST NOTIFICATION ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- HELPER: FORMAT RUPIAH ---
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // --- DASHBOARD LOGIC ---
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let text = "Halo, Bestie!";
+            if (hour < 11) text = "Pagi, Semangat!";
+            else if (hour < 15) text = "Siang, Jangan lupa makan!";
+            else if (hour < 19) text = "Sore, Tetap produktif ya!";
+            else text = "Malam, Istirahat yang cukup!";
+            document.getElementById('greetingText').innerText = text;
+        }
+
+        function setQuote() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('dailyQuote').innerText = `"${randomQuote}"`;
+        }
+
+        function renderDashboard() {
+            let income = 0;
+            let expense = 0;
+            
+            transactions.forEach(t => {
+                if (t.type === 'income') income += t.amount;
+                else expense += t.amount;
+            });
+
+            const balance = income - expense;
+
+            document.getElementById('totalBalance').innerText = formatRupiah(balance);
+            document.getElementById('totalIncome').innerText = formatRupiah(income);
+            document.getElementById('totalExpense').innerText = formatRupiah(expense);
+
+            // Render Recent Transactions (Top 3)
+            const recentList = document.getElementById('recentTransactionsList');
+            recentList.innerHTML = '';
+            
+            const recent = [...transactions].reverse().slice(0, 3);
+            
+            if(recent.length === 0) {
+                recentList.innerHTML = '<div class="empty-state" style="padding:10px;"><small>Belum ada transaksi nih.</small></div>';
+            } else {
+                recent.forEach(t => {
+                    const el = document.createElement('div');
+                    el.className = 'list-item';
+                    el.innerHTML = `
+                        <div class="trans-info">
+                            <h4>${t.desc}</h4>
+                            <span class="trans-cat">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span>
+                        </div>
+                        <div class="trans-amount ${t.type === 'income' ? 'plus' : 'minus'}">
+                            ${t.type === 'income' ? '+' : '-'} ${formatRupiah(t.amount)}
+                        </div>
+                    `;
+                    recentList.appendChild(el);
+                });
+            }
+        }
+
+        // --- PLANNER LOGIC ---
+        document.getElementById('taskForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const taskName = document.getElementById('taskInput').value;
+            const taskTime = document.getElementById('taskTime').value;
+
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                time: taskTime,
+                done: false
+            };
+
+            tasks.push(newTask);
+            saveData();
+            closeModal('taskModal');
+            showToast('Jadwal ditambahkan, semangat!');
+        });
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.done = !task.done;
+                saveData();
+                if(task.done) showToast('Hebat! Satu tugas beres.');
+            }
+        }
+
+        function deleteTask(id) {
+            if(confirm('Hapus jadwal ini?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                saveData();
+            }
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+
+            // Sort by time
+            tasks.sort((a, b) => a.time.localeCompare(b.time));
+
+            if (tasks.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="ri-calendar-check-line"></i>
+                        <p>Belum ada jadwal.<br>Tombol + untuk mulai!</p>
+                    </div>`;
+            } else {
+                tasks.forEach(t => {
+                    const el = document.createElement('div');
+                    el.className = 'list-item';
+                    el.innerHTML = `
+                        <div class="task-left">
+                            <div class="checkbox ${t.done ? 'checked' : ''}" onclick="toggleTask(${t.id})">
+                                <i class="ri-check-line"></i>
+                            </div>
+                            <div>
+                                <div class="task-text ${t.done ? 'done' : ''}">${t.name}</div>
+                                <div class="task-time"><i class="ri-time-line"></i> ${t.time}</div>
+                            </div>
+                        </div>
+                        <i class="ri-delete-bin-line" style="color:#ef4444; cursor:pointer;" onclick="deleteTask(${t.id})"></i>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+
+            // Update Progress
+            const total = tasks.length;
+            const done = tasks.filter(t => t.done).length;
+            const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+            
+            document.getElementById('taskProgressBar').style.width = percent + '%';
+            document.getElementById('taskProgressText').innerText = `${percent}% Selesai`;
+        }
+
+        // --- FINANCE LOGIC ---
+        document.getElementById('financeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = document.getElementById('transType').value;
+            const amount = parseFloat(document.getElementById('transAmount').value);
+            const desc = document.getElementById('transDesc').value;
+
+            const newTrans = {
+                id: Date.now(),
+                type,
+                amount,
+                desc,
+                date: new Date().toLocaleDateString('id-ID')
+            };
+
+            transactions.push(newTrans);
+            saveData();
+            closeModal('financeModal');
+            
+            if(type === 'expense') showToast('Pengeluaran tercatat. Jangan overbudget ya!');
+            else showToast('Dana masuk! Makin kaya.');
+        });
+
+        function deleteTrans(id) {
+            if(confirm('Hapus catatan ini?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveData();
+            }
+        }
+        
+        function resetFinance() {
+            if(confirm('Yakin mau reset semua data keuangan? Data hilang selamanya loh.')) {
+                transactions = [];
+                saveData();
+                showToast('Data keuangan di-reset.');
+            }
+        }
+
+        function renderFinance() {
+            const list = document.getElementById('financeList');
+            list.innerHTML = '';
+            
+            // Sort newest first
+            const sorted = [...transactions].reverse();
+
+            if (sorted.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="ri-wallet-3-line"></i>
+                        <p>Catat pengeluaranmu<br>biar bisa nabung!</p>
+                    </div>`;
+            } else {
+                sorted.forEach(t => {
+                    const el = document.createElement('div');
+                    el.className = 'list-item';
+                    el.innerHTML = `
+                        <div class="trans-info">
+                            <h4>${t.desc}</h4>
+                            <span class="trans-cat">${t.date}</span>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="trans-amount ${t.type === 'income' ? 'plus' : 'minus'}">
+                                ${t.type === 'income' ? '+' : '-'} ${formatRupiah(t.amount)}
+                            </div>
+                            <i class="ri-close-circle-fill" style="color:#d1d5db; font-size:1rem; cursor:pointer; margin-top:5px;" onclick="deleteTrans(${t.id})"></i>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
